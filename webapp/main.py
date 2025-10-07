@@ -2,8 +2,7 @@ import gradio as gr
 from transformers import pipeline
 
 # Lade das GPT-2 Modell
-generator = pipeline("text-generation", model="/models/distilgpt2")
-
+generator = pipeline("text-generation", model="gpt2")
 
 # Definiere die Funktion zur Textgenerierung
 def generate_text(prompt):
