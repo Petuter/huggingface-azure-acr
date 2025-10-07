@@ -1,22 +1,24 @@
+import gradio as gr
 from transformers import pipeline
-from fastapi import FastAPI, Response
-from pydantic import BaseModel
 
-generator = pipeline('text-generation', model='gpt2')
+# Lade das GPT-2 Modell
+generator = pipeline("text-generation", model="gpt2")
 
-app = FastAPI()
+# Definiere die Funktion zur Textgenerierung
+def generate_text(prompt):
+    result = generator(prompt, max_length=35, num_return_sequences=1)
+    return result[0]["generated_text"]
 
+# Erstelle das Gradio-Interface
+demo = gr.Interface(
+    fn=generate_text,
+    inputs=gr.Textbox(label="Eingabetext", placeholder="Schreibe hier deinen Prompt..."),
+    outputs=gr.Textbox(label="Generierter Text"),
+    title="GPT-2 Textgenerator",
+    description="Gib einen Text ein, und GPT-2 schreibt ihn weiter.",
+    theme="soft"
+)
 
-class Body(BaseModel):
-    text: str
-
-
-@app.get('/')
-def root():
-    return Response("<h1>A self-documenting API to interact with a GPT2 model and generate text</h1>")
-
-
-@app.post('/generate')
-def predict(body: Body):
-    results = generator(body.text, max_length=35, num_return_sequences=1)
-    return results[0]
+# Starte die App
+if __name__ == "__main__":
+    demo.launch()
