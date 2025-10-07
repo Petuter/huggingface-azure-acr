@@ -1,15 +1,14 @@
 FROM python:3.8
 
-COPY ./requirements.txt /webapp/requirements.txt
-
 WORKDIR /webapp
 
-RUN pip install -r requirements.txt
+COPY ./requirements.txt /webapp/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY webapp/* /webapp
 
 EXPOSE 8000
 
-ENTRYPOINT [ "uvicorn" ]
+# Starte das Gradio-Interface auf Port 8000
+CMD ["python", "app.py"]
 
-CMD [ "--host", "0.0.0.0", "main:app" ]
